@@ -327,4 +327,318 @@ setInterval(()=>{
 
     });
 
+
+    // ==========================================
+// 3D BIRTHDAY CAKE
+// ==========================================
+
+const cake = new THREE.Group();
+
+
+// ---------- Bottom Layer ----------
+
+const layer1 = new THREE.Mesh(
+
+    new THREE.CylinderGeometry(4,4,1.2,64),
+
+    new THREE.MeshPhongMaterial({
+
+        color:0xffc2d1,
+
+        shininess:120
+
+    })
+
+);
+
+layer1.position.y=0;
+
+cake.add(layer1);
+
+
+// ---------- Middle Layer ----------
+
+const layer2 = new THREE.Mesh(
+
+    new THREE.CylinderGeometry(3,3,1.1,64),
+
+    new THREE.MeshPhongMaterial({
+
+        color:0xff99bb,
+
+        shininess:120
+
+    })
+
+);
+
+layer2.position.y=1.15;
+
+cake.add(layer2);
+
+
+// ---------- Top Layer ----------
+
+const layer3 = new THREE.Mesh(
+
+    new THREE.CylinderGeometry(2,2,1,64),
+
+    new THREE.MeshPhongMaterial({
+
+        color:0xff77aa,
+
+        shininess:120
+
+    })
+
+);
+
+layer3.position.y=2.2;
+
+cake.add(layer3);
+
+
+
+// ==========================================
+// ICING
+// ==========================================
+
+const icing = new THREE.Mesh(
+
+    new THREE.CylinderGeometry(2.1,2.1,0.22,64),
+
+    new THREE.MeshPhongMaterial({
+
+        color:0xffffff
+
+    })
+
+);
+
+icing.position.y=2.72;
+
+cake.add(icing);
+
+
+
+// ==========================================
+// CAKE BASE
+// ==========================================
+
+const base = new THREE.Mesh(
+
+    new THREE.CylinderGeometry(5.2,5.2,0.25,64),
+
+    new THREE.MeshPhongMaterial({
+
+        color:0xd4af37,
+
+        metalness:0.4
+
+    })
+
+);
+
+base.position.y=-0.7;
+
+cake.add(base);
+
+
+
+// ==========================================
+// CHERRIES
+// ==========================================
+
+for(let i=0;i<12;i++){
+
+    const cherry=new THREE.Mesh(
+
+        new THREE.SphereGeometry(0.18,20,20),
+
+        new THREE.MeshPhongMaterial({
+
+            color:0xcc0000,
+
+            emissive:0x550000
+
+        })
+
+    );
+
+    const angle=(Math.PI*2/12)*i;
+
+    cherry.position.set(
+
+        Math.cos(angle)*1.8,
+
+        2.85,
+
+        Math.sin(angle)*1.8
+
+    );
+
+    cake.add(cherry);
+
+}
+
+
+
+// ==========================================
+// CANDLES
+// ==========================================
+
+const candleGroup=new THREE.Group();
+
+for(let i=0;i<5;i++){
+
+    const candle=new THREE.Mesh(
+
+        new THREE.CylinderGeometry(0.08,0.08,0.9,20),
+
+        new THREE.MeshPhongMaterial({
+
+            color:0x87cefa
+
+        })
+
+    );
+
+    candle.position.set(
+
+        -1+i*0.5,
+
+        3.3,
+
+        0
+
+    );
+
+    candleGroup.add(candle);
+
+}
+
+cake.add(candleGroup);
+
+
+
+// ==========================================
+// FLAMES
+// ==========================================
+
+const flames=[];
+
+for(let i=0;i<5;i++){
+
+    const flame=new THREE.Mesh(
+
+        new THREE.SphereGeometry(0.09,16,16),
+
+        new THREE.MeshBasicMaterial({
+
+            color:0xffcc00
+
+        })
+
+    );
+
+    flame.position.set(
+
+        -1+i*0.5,
+
+        3.85,
+
+        0
+
+    );
+
+    flames.push(flame);
+
+    cake.add(flame);
+
+}
+
+
+
+// Flame Lights
+
+const flameLight=new THREE.PointLight(
+
+    0xffaa00,
+
+    3,
+
+    20
+
+);
+
+flameLight.position.set(0,4,0);
+
+cake.add(flameLight);
+
+
+
+// ==========================================
+// SPRINKLES
+// ==========================================
+
+for(let i=0;i<150;i++){
+
+    const sprinkle=new THREE.Mesh(
+
+        new THREE.BoxGeometry(
+
+            0.05,
+
+            0.15,
+
+            0.05
+
+        ),
+
+        new THREE.MeshPhongMaterial({
+
+            color:Math.random()*0xffffff
+
+        })
+
+    );
+
+    const theta=Math.random()*Math.PI*2;
+
+    const r=1.7+Math.random()*0.3;
+
+    sprinkle.position.set(
+
+        Math.cos(theta)*r,
+
+        2.82,
+
+        Math.sin(theta)*r
+
+    );
+
+    sprinkle.rotation.set(
+
+        Math.random()*3,
+
+        Math.random()*3,
+
+        Math.random()*3
+
+    );
+
+    cake.add(sprinkle);
+
+}
+
+
+
+// ==========================================
+// POSITION
+// ==========================================
+
+cake.position.y=-2;
+
+scene.add(cake);
+
 },2000);
