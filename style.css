@@ -1,26 +1,456 @@
-body {
-  margin: 0;
-  overflow: hidden;
-  background: black;
-  font-family: Arial, sans-serif;
+/* --------------------------
+   GLOBAL
+--------------------------- */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-.overlay {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  top: 20px;
-  color: white;
-  z-index: 10;
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:'Poppins',sans-serif;
+    background:#000;
+    color:white;
 }
 
-h1 {
-  font-size: 40px;
-  color: #ff4d6d;
-  text-shadow: 0 0 20px #ff4d6d;
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:1;
 }
 
-p {
-  font-size: 18px;
-  color: #fff;
+/* --------------------------
+   LOADING SCREEN
+--------------------------- */
+
+#loading{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:#000;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+    animation:fadeLoading 3s forwards;
+}
+
+#loading h1{
+    color:#ff4f8b;
+    font-size:40px;
+    letter-spacing:3px;
+    animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+    0%{
+        transform:scale(1);
+        text-shadow:0 0 10px #ff4f8b;
+    }
+    50%{
+        transform:scale(1.1);
+        text-shadow:0 0 35px #ff4f8b;
+    }
+    100%{
+        transform:scale(1);
+        text-shadow:0 0 10px #ff4f8b;
+    }
+}
+
+@keyframes fadeLoading{
+    0%{
+        opacity:1;
+    }
+
+    85%{
+        opacity:1;
+    }
+
+    100%{
+        opacity:0;
+        visibility:hidden;
+    }
+}
+
+/* --------------------------
+   OVERLAY
+--------------------------- */
+
+#overlay{
+
+    position:absolute;
+
+    width:100%;
+
+    top:50%;
+
+    left:50%;
+
+    transform:translate(-50%,-50%);
+
+    text-align:center;
+
+    z-index:5;
+
+    pointer-events:none;
+
+}
+
+#overlay h1{
+
+    font-size:60px;
+
+    color:#ff77aa;
+
+    font-family:'Great Vibes',cursive;
+
+    margin-bottom:15px;
+
+    text-shadow:
+
+    0 0 20px hotpink,
+
+    0 0 50px deeppink;
+
+}
+
+#overlay h2{
+
+    font-size:45px;
+
+    margin-bottom:20px;
+
+    color:white;
+
+}
+
+#overlay p{
+
+    width:70%;
+
+    margin:auto;
+
+    font-size:20px;
+
+    line-height:35px;
+
+    color:#eee;
+
+}
+
+/* --------------------------
+   BUTTONS
+--------------------------- */
+
+button{
+
+    cursor:pointer;
+
+    border:none;
+
+    outline:none;
+
+    transition:.4s;
+
+}
+
+#letterBtn{
+
+    margin-top:40px;
+
+    padding:15px 45px;
+
+    border-radius:50px;
+
+    background:linear-gradient(45deg,#ff4d88,#ff66aa);
+
+    color:white;
+
+    font-size:20px;
+
+    font-weight:bold;
+
+    pointer-events:auto;
+
+    box-shadow:0 0 25px hotpink;
+
+}
+
+#letterBtn:hover{
+
+    transform:scale(1.1);
+
+    box-shadow:0 0 50px deeppink;
+
+}
+
+/* --------------------------
+   MUSIC BUTTON
+--------------------------- */
+
+#musicControl{
+
+    position:absolute;
+
+    bottom:30px;
+
+    left:30px;
+
+    z-index:20;
+
+}
+
+#musicBtn{
+
+    background:#ff4d88;
+
+    color:white;
+
+    border-radius:40px;
+
+    padding:12px 30px;
+
+    font-size:18px;
+
+    box-shadow:0 0 20px hotpink;
+
+}
+
+#musicBtn:hover{
+
+    transform:scale(1.08);
+
+}
+
+/* --------------------------
+   LETTER
+--------------------------- */
+
+#letter{
+
+    position:fixed;
+
+    width:100%;
+
+    height:100%;
+
+    top:0;
+
+    left:0;
+
+    background:rgba(0,0,0,.82);
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:100;
+
+}
+
+.letterBox{
+
+    width:650px;
+
+    max-width:90%;
+
+    background:white;
+
+    color:#222;
+
+    padding:50px;
+
+    border-radius:20px;
+
+    position:relative;
+
+    animation:popup .5s;
+
+    box-shadow:0 0 50px hotpink;
+
+}
+
+@keyframes popup{
+
+    from{
+
+        transform:scale(.5);
+
+        opacity:0;
+
+    }
+
+    to{
+
+        transform:scale(1);
+
+        opacity:1;
+
+    }
+
+}
+
+.letterBox h2{
+
+    text-align:center;
+
+    margin-bottom:25px;
+
+    color:#ff4d88;
+
+    font-size:35px;
+
+}
+
+.letterBox p{
+
+    line-height:34px;
+
+    font-size:19px;
+
+    text-align:justify;
+
+}
+
+#closeLetter{
+
+    position:absolute;
+
+    right:20px;
+
+    top:20px;
+
+    font-size:28px;
+
+    cursor:pointer;
+
+}
+
+/* --------------------------
+   PHOTO SLIDESHOW
+--------------------------- */
+
+#gallery{
+
+    position:absolute;
+
+    right:35px;
+
+    bottom:35px;
+
+    z-index:15;
+
+}
+
+#slide{
+
+    width:260px;
+
+    height:360px;
+
+    border-radius:20px;
+
+    object-fit:cover;
+
+    border:4px solid white;
+
+    box-shadow:
+
+    0 0 20px white,
+
+    0 0 40px hotpink;
+
+    transition:1s;
+
+}
+
+#slide:hover{
+
+    transform:scale(1.05) rotate(2deg);
+
+}
+
+/* --------------------------
+   FLOATING EFFECT
+--------------------------- */
+
+@keyframes floating{
+
+    0%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-12px);
+
+    }
+
+    100%{
+
+        transform:translateY(0);
+
+    }
+
+}
+
+#gallery{
+
+    animation:floating 4s ease-in-out infinite;
+
+}
+
+/* --------------------------
+   RESPONSIVE
+--------------------------- */
+
+@media(max-width:900px){
+
+#overlay h1{
+
+font-size:45px;
+
+}
+
+#overlay h2{
+
+font-size:30px;
+
+}
+
+#overlay p{
+
+width:90%;
+
+font-size:17px;
+
+line-height:28px;
+
+}
+
+#slide{
+
+width:170px;
+
+height:250px;
+
+}
+
+.letterBox{
+
+padding:25px;
+
+}
+
 }
