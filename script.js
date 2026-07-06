@@ -642,3 +642,140 @@ cake.position.y=-2;
 scene.add(cake);
 
 },2000);
+const gate=document.getElementById("gate");
+
+const yes=document.getElementById("yesBtn");
+
+const no=document.getElementById("noBtn");
+
+const gift=document.getElementById("gift");
+
+const message=document.getElementById("correctMessage");
+
+const music=document.getElementById("music");
+
+
+
+// Hide birthday page first
+
+document.getElementById("overlay").style.display="none";
+
+document.getElementById("gallery").style.display="none";
+
+document.getElementById("musicControl").style.display="none";
+
+
+
+// ---------------------------
+// NO BUTTON RUNS AWAY
+// ---------------------------
+
+function moveButton(){
+
+let x=Math.random()*(window.innerWidth-180);
+
+let y=Math.random()*(window.innerHeight-80);
+
+no.style.position="fixed";
+
+no.style.left=x+"px";
+
+no.style.top=y+"px";
+
+}
+
+no.addEventListener("mouseenter",moveButton);
+
+no.addEventListener("mouseover",moveButton);
+
+
+
+// ---------------------------
+// CORRECT ANSWER
+// ---------------------------
+
+yes.onclick=()=>{
+
+confetti({
+
+particleCount:250,
+
+spread:180,
+
+origin:{y:0.6}
+
+});
+
+
+
+yes.style.display="none";
+
+no.style.display="none";
+
+
+
+message.style.display="block";
+
+
+
+music.volume=.35;
+
+music.play().catch(()=>{});
+
+};
+
+
+
+// ---------------------------
+// OPEN GIFT
+// ---------------------------
+
+gift.onclick=()=>{
+
+gift.innerHTML="💖";
+
+gift.style.transform="scale(8)";
+
+gift.style.opacity="0";
+
+
+
+setTimeout(()=>{
+
+gate.style.opacity="0";
+
+gate.style.transition="1s";
+
+},700);
+
+
+
+setTimeout(()=>{
+
+gate.style.display="none";
+
+
+
+document.getElementById("overlay").style.display="block";
+
+document.getElementById("gallery").style.display="block";
+
+document.getElementById("musicControl").style.display="block";
+
+
+
+confetti({
+
+particleCount:500,
+
+spread:360,
+
+origin:{y:0.5}
+
+});
+
+
+
+},1700);
+
+};
