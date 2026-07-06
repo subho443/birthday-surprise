@@ -1,464 +1,307 @@
-/* --------------------------
-   GLOBAL
---------------------------- */
+/* =====================================
+   GOOGLE FONT
+===================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Great+Vibes&display=swap');
+
+/* =====================================
+   RESET
+===================================== */
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
-html,body{
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    font-family:'Poppins',sans-serif;
-    background:#000;
-    color:white;
+html,
+body{
+
+width:100%;
+height:100%;
+overflow:hidden;
+font-family:'Poppins',sans-serif;
+background:#000814;
+color:#fff;
+
 }
+
+/* =====================================
+   CANVAS
+===================================== */
 
 canvas{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    z-index:1;
+
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:1;
+
 }
 
-/* --------------------------
-   LOADING SCREEN
---------------------------- */
+/* =====================================
+   LOADING
+===================================== */
 
 #loading{
-    position:fixed;
-    width:100%;
-    height:100%;
-    background:#000;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:1000;
-    animation:fadeLoading 3s forwards;
+
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#000;
+z-index:999999;
+
+animation:loadingFade 3s forwards;
+
 }
 
 #loading h1{
-    color:#ff4f8b;
-    font-size:40px;
-    letter-spacing:3px;
-    animation:pulse 1s infinite;
+
+font-size:48px;
+color:#ff6ca8;
+letter-spacing:4px;
+text-shadow:
+
+0 0 20px hotpink,
+0 0 60px deeppink;
+
+animation:pulse 1.2s infinite;
+
 }
 
 @keyframes pulse{
-    0%{
-        transform:scale(1);
-        text-shadow:0 0 10px #ff4f8b;
-    }
-    50%{
-        transform:scale(1.1);
-        text-shadow:0 0 35px #ff4f8b;
-    }
-    100%{
-        transform:scale(1);
-        text-shadow:0 0 10px #ff4f8b;
-    }
-}
 
-@keyframes fadeLoading{
-    0%{
-        opacity:1;
-    }
+0%{
 
-    85%{
-        opacity:1;
-    }
-
-    100%{
-        opacity:0;
-        visibility:hidden;
-    }
-}
-
-/* --------------------------
-   OVERLAY
---------------------------- */
-
-#overlay{
-
-    position:absolute;
-
-    width:100%;
-
-    top:50%;
-
-    left:50%;
-
-    transform:translate(-50%,-50%);
-
-    text-align:center;
-
-    z-index:5;
-
-    pointer-events:none;
+transform:scale(1);
 
 }
 
-#overlay h1{
+50%{
 
-    font-size:60px;
-
-    color:#ff77aa;
-
-    font-family:'Great Vibes',cursive;
-
-    margin-bottom:15px;
-
-    text-shadow:
-
-    0 0 20px hotpink,
-
-    0 0 50px deeppink;
+transform:scale(1.1);
 
 }
 
-#overlay h2{
+100%{
 
-    font-size:45px;
-
-    margin-bottom:20px;
-
-    color:white;
+transform:scale(1);
 
 }
 
-#overlay p{
+}
 
-    width:70%;
+@keyframes loadingFade{
 
-    margin:auto;
+0%{
 
-    font-size:20px;
-
-    line-height:35px;
-
-    color:#eee;
+opacity:1;
 
 }
 
-/* --------------------------
-   BUTTONS
---------------------------- */
+80%{
 
-button{
-
-    cursor:pointer;
-
-    border:none;
-
-    outline:none;
-
-    transition:.4s;
+opacity:1;
 
 }
 
-#letterBtn{
+100%{
 
-    margin-top:40px;
-
-    padding:15px 45px;
-
-    border-radius:50px;
-
-    background:linear-gradient(45deg,#ff4d88,#ff66aa);
-
-    color:white;
-
-    font-size:20px;
-
-    font-weight:bold;
-
-    pointer-events:auto;
-
-    box-shadow:0 0 25px hotpink;
+opacity:0;
+visibility:hidden;
 
 }
 
-#letterBtn:hover{
+}
 
-    transform:scale(1.1);
+/* =====================================
+   ENTRY GATE
+===================================== */
 
-    box-shadow:0 0 50px deeppink;
+#gate{
+
+position:fixed;
+
+top:0;
+
+left:0;
+
+width:100%;
+
+height:100%;
+
+background:
+
+radial-gradient(circle at top,#2b004f,#090018);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+z-index:99999;
+
+transition:1s;
 
 }
 
-/* --------------------------
-   MUSIC BUTTON
---------------------------- */
-
-#musicControl{
-
-    position:absolute;
-
-    bottom:30px;
-
-    left:30px;
-
-    z-index:20;
-
-}
-
-#musicBtn{
-
-    background:#ff4d88;
-
-    color:white;
-
-    border-radius:40px;
-
-    padding:12px 30px;
-
-    font-size:18px;
-
-    box-shadow:0 0 20px hotpink;
-
-}
-
-#musicBtn:hover{
-
-    transform:scale(1.08);
-
-}
-
-/* --------------------------
-   LETTER
---------------------------- */
-
-#letter{
-
-    position:fixed;
-
-    width:100%;
-
-    height:100%;
-
-    top:0;
-
-    left:0;
-
-    background:rgba(0,0,0,.82);
-
-    display:none;
-
-    justify-content:center;
-
-    align-items:center;
-
-    z-index:100;
-
-}
-
-.letterBox{
-
-    width:650px;
-
-    max-width:90%;
-
-    background:white;
-
-    color:#222;
-
-    padding:50px;
-
-    border-radius:20px;
-
-    position:relative;
-
-    animation:popup .5s;
-
-    box-shadow:0 0 50px hotpink;
-
-}
-
-@keyframes popup{
-
-    from{
-
-        transform:scale(.5);
-
-        opacity:0;
-
-    }
-
-    to{
-
-        transform:scale(1);
-
-        opacity:1;
-
-    }
-
-}
-
-.letterBox h2{
-
-    text-align:center;
-
-    margin-bottom:25px;
-
-    color:#ff4d88;
-
-    font-size:35px;
-
-}
-
-.letterBox p{
-
-    line-height:34px;
-
-    font-size:19px;
-
-    text-align:justify;
-
-}
-
-#closeLetter{
-
-    position:absolute;
-
-    right:20px;
-
-    top:20px;
-
-    font-size:28px;
-
-    cursor:pointer;
-
-}
-
-/* --------------------------
-   PHOTO SLIDESHOW
---------------------------- */
-
-#gallery{
-
-    position:absolute;
-
-    right:35px;
-
-    bottom:35px;
-
-    z-index:15;
-
-}
-
-#slide{
-
-    width:260px;
-
-    height:360px;
-
-    border-radius:20px;
-
-    object-fit:cover;
-
-    border:4px solid white;
-
-    box-shadow:
-
-    0 0 20px white,
-
-    0 0 40px hotpink;
-
-    transition:1s;
-
-}
-
-#slide:hover{
-
-    transform:scale(1.05) rotate(2deg);
-
-}
-
-/* --------------------------
-   FLOATING EFFECT
---------------------------- */
-
-@keyframes floating{
-
-    0%{
-
-        transform:translateY(0);
-
-    }
-
-    50%{
-
-        transform:translateY(-12px);
-
-    }
-
-    100%{
-
-        transform:translateY(0);
-
-    }
-
-}
-
-#gallery{
-
-    animation:floating 4s ease-in-out infinite;
-
-}
-
-/* --------------------------
-   RESPONSIVE
---------------------------- */
-
-@media(max-width:900px){
-
-#overlay h1{
-
-font-size:45px;
-
-}
-
-#overlay h2{
-
-font-size:30px;
-
-}
-
-#overlay p{
+.gateBox{
 
 width:90%;
 
-font-size:17px;
+max-width:700px;
 
-line-height:28px;
+text-align:center;
+
+padding:50px;
+
+background:rgba(255,255,255,.05);
+
+border:1px solid rgba(255,255,255,.15);
+
+border-radius:25px;
+
+backdrop-filter:blur(15px);
+
+box-shadow:
+
+0 0 40px rgba(255,0,128,.3);
 
 }
 
-#slide{
+.gateBox h1{
 
-width:170px;
+font-family:'Great Vibes',cursive;
 
-height:250px;
+font-size:72px;
+
+color:#ff74c2;
+
+margin-bottom:10px;
+
+text-shadow:
+
+0 0 25px hotpink,
+
+0 0 60px deeppink;
 
 }
 
-.letterBox{
+.gateBox h2{
 
-padding:25px;
+font-size:30px;
+
+margin-bottom:20px;
 
 }
+
+.gateBox h3{
+
+font-size:38px;
+
+margin-bottom:40px;
+
+color:white;
+
+}
+
+.buttons{
+
+position:relative;
+
+height:180px;
+
+}
+
+.buttons button{
+
+position:absolute;
+
+padding:18px 45px;
+
+border:none;
+
+border-radius:60px;
+
+font-size:22px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+#yesBtn{
+
+left:80px;
+
+background:
+
+linear-gradient(45deg,#ff2d75,#ff7bbd);
+
+color:white;
+
+box-shadow:
+
+0 0 30px hotpink;
+
+}
+
+#yesBtn:hover{
+
+transform:scale(1.1);
+
+}
+
+#noBtn{
+
+right:80px;
+
+background:#555;
+
+color:white;
+
+}
+
+/* =====================================
+   SUCCESS MESSAGE
+===================================== */
+
 #correctMessage{
 
 display:none;
 
 margin-top:50px;
 
-animation:fadeIn 1s;
+animation:fadeUp .8s;
+
+}
+
+#correctMessage h1{
+
+font-size:52px;
+
+color:#ff74c2;
+
+margin-bottom:20px;
+
+}
+
+#correctMessage p{
+
+font-size:24px;
+
+margin-bottom:20px;
 
 }
 
@@ -468,11 +311,11 @@ font-size:130px;
 
 cursor:pointer;
 
-margin-top:25px;
+animation:bounce 1.5s infinite;
 
-animation:bounce 1s infinite;
+transition:.5s;
 
-transition:.4s;
+filter:drop-shadow(0 0 35px gold);
 
 }
 
@@ -484,15 +327,27 @@ transform:scale(1.2) rotate(10deg);
 
 @keyframes bounce{
 
-0%{transform:translateY(0);}
+0%{
 
-50%{transform:translateY(-20px);}
-
-100%{transform:translateY(0);}
+transform:translateY(0);
 
 }
 
-@keyframes fadeIn{
+50%{
+
+transform:translateY(-18px);
+
+}
+
+100%{
+
+transform:translateY(0);
+
+}
+
+}
+
+@keyframes fadeUp{
 
 from{
 
@@ -511,4 +366,1421 @@ transform:translateY(0);
 }
 
 }
+
+/* =====================================
+   MAIN OVERLAY
+===================================== */
+
+#overlay{
+
+position:absolute;
+
+top:50%;
+
+left:50%;
+
+transform:translate(-50%,-50%);
+
+width:100%;
+
+text-align:center;
+
+z-index:5;
+
+pointer-events:none;
+
 }
+
+#overlay h1{
+
+font-family:'Great Vibes',cursive;
+
+font-size:70px;
+
+color:#ff77bb;
+
+margin-bottom:15px;
+
+text-shadow:
+
+0 0 20px hotpink,
+
+0 0 60px deeppink;
+
+}
+
+#overlay h2{
+
+font-size:48px;
+
+margin-bottom:20px;
+
+}
+
+#overlay p{
+
+width:70%;
+
+margin:auto;
+
+font-size:21px;
+
+line-height:36px;
+
+color:#eee;
+
+}
+
+/* =====================================
+   BUTTONS
+===================================== */
+
+button{
+
+outline:none;
+
+border:none;
+
+cursor:pointer;
+
+transition:.35s;
+
+}
+
+#letterBtn{
+
+margin-top:35px;
+
+padding:16px 45px;
+
+font-size:21px;
+
+font-weight:bold;
+
+border-radius:50px;
+
+background:
+
+linear-gradient(45deg,#ff4d88,#ff6ca8);
+
+color:white;
+
+pointer-events:auto;
+
+box-shadow:
+
+0 0 25px hotpink;
+
+}
+
+#letterBtn:hover{
+
+transform:scale(1.08);
+
+box-shadow:
+
+0 0 60px deeppink;
+
+}
+
+
+
+
+
+/* =====================================
+   MUSIC CONTROLLER
+===================================== */
+
+#musicControl{
+
+position:fixed;
+
+bottom:30px;
+
+left:30px;
+
+z-index:100;
+
+}
+
+#musicBtn{
+
+padding:15px 35px;
+
+border-radius:50px;
+
+background:linear-gradient(45deg,#ff4d88,#ff8ab8);
+
+color:white;
+
+font-size:18px;
+
+font-weight:600;
+
+box-shadow:
+
+0 0 20px rgba(255,0,120,.6),
+
+0 0 40px rgba(255,0,120,.4);
+
+transition:.35s;
+
+}
+
+#musicBtn:hover{
+
+transform:translateY(-5px) scale(1.05);
+
+box-shadow:
+
+0 0 30px hotpink,
+
+0 0 60px deeppink;
+
+}
+
+
+
+/* =====================================
+   LOVE LETTER
+===================================== */
+
+#letter{
+
+position:fixed;
+
+top:0;
+
+left:0;
+
+width:100%;
+
+height:100%;
+
+display:none;
+
+justify-content:center;
+
+align-items:center;
+
+background:rgba(0,0,0,.85);
+
+backdrop-filter:blur(12px);
+
+z-index:999;
+
+}
+
+.letterBox{
+
+width:700px;
+
+max-width:92%;
+
+padding:45px;
+
+border-radius:25px;
+
+background:rgba(255,255,255,.95);
+
+color:#222;
+
+box-shadow:
+
+0 0 50px rgba(255,105,180,.6);
+
+position:relative;
+
+animation:letterOpen .6s ease;
+
+}
+
+@keyframes letterOpen{
+
+0%{
+
+opacity:0;
+
+transform:scale(.6) rotate(-6deg);
+
+}
+
+100%{
+
+opacity:1;
+
+transform:scale(1) rotate(0deg);
+
+}
+
+}
+
+.letterBox h2{
+
+text-align:center;
+
+font-size:38px;
+
+margin-bottom:25px;
+
+color:#ff4d88;
+
+font-family:'Great Vibes',cursive;
+
+}
+
+.letterBox p{
+
+font-size:18px;
+
+line-height:34px;
+
+text-align:justify;
+
+color:#333;
+
+}
+
+#closeLetter{
+
+position:absolute;
+
+right:20px;
+
+top:15px;
+
+font-size:30px;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+#closeLetter:hover{
+
+transform:rotate(180deg) scale(1.2);
+
+color:red;
+
+}
+
+
+
+/* =====================================
+   PHOTO GALLERY
+===================================== */
+
+#gallery{
+
+position:fixed;
+
+right:40px;
+
+bottom:40px;
+
+z-index:30;
+
+animation:floating 5s ease-in-out infinite;
+
+}
+
+#slide{
+
+width:270px;
+
+height:380px;
+
+object-fit:cover;
+
+border-radius:20px;
+
+border:5px solid white;
+
+box-shadow:
+
+0 0 25px rgba(255,255,255,.5),
+
+0 0 50px hotpink;
+
+transition:.6s;
+
+}
+
+#slide:hover{
+
+transform:scale(1.08) rotate(3deg);
+
+}
+
+
+
+/* =====================================
+   FLOATING EFFECT
+===================================== */
+
+@keyframes floating{
+
+0%{
+
+transform:translateY(0px);
+
+}
+
+50%{
+
+transform:translateY(-15px);
+
+}
+
+100%{
+
+transform:translateY(0px);
+
+}
+
+}
+
+
+
+/* =====================================
+   GLASS PANELS
+===================================== */
+
+.glass{
+
+background:rgba(255,255,255,.08);
+
+border:1px solid rgba(255,255,255,.15);
+
+backdrop-filter:blur(12px);
+
+border-radius:20px;
+
+box-shadow:
+
+0 0 30px rgba(255,0,120,.2);
+
+}
+
+
+
+/* =====================================
+   SCROLLBAR
+===================================== */
+
+::-webkit-scrollbar{
+
+width:8px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+background:#ff4d88;
+
+border-radius:50px;
+
+}
+
+::-webkit-scrollbar-track{
+
+background:#111;
+
+}
+
+
+
+/* =====================================
+   FADE ANIMATION
+===================================== */
+
+.fadeIn{
+
+animation:fadeIn .8s;
+
+}
+
+@keyframes fadeIn{
+
+0%{
+
+opacity:0;
+
+transform:translateY(30px);
+
+}
+
+100%{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+
+
+/* =====================================
+   GLOW EFFECT
+===================================== */
+
+.glow{
+
+animation:glow 2s infinite alternate;
+
+}
+
+@keyframes glow{
+
+0%{
+
+text-shadow:
+
+0 0 10px hotpink;
+
+}
+
+100%{
+
+text-shadow:
+
+0 0 20px hotpink,
+
+0 0 40px deeppink,
+
+0 0 70px deeppink;
+
+}
+
+}
+
+
+
+/* =====================================
+   BALLOON ANIMATION
+===================================== */
+
+.balloon{
+
+position:absolute;
+
+width:90px;
+
+height:110px;
+
+border-radius:50% 50% 45% 45%;
+
+animation:floatBalloon linear infinite;
+
+box-shadow:0 0 25px rgba(255,255,255,.35);
+
+}
+
+.balloon::before{
+
+content:"";
+
+position:absolute;
+
+bottom:-45px;
+
+left:50%;
+
+width:2px;
+
+height:45px;
+
+background:white;
+
+transform:translateX(-50%);
+
+}
+
+.balloon.red{
+
+background:#ff4d6d;
+
+}
+
+.balloon.blue{
+
+background:#4da6ff;
+
+}
+
+.balloon.pink{
+
+background:#ff7bc1;
+
+}
+
+.balloon.yellow{
+
+background:#ffd93d;
+
+}
+
+.balloon.purple{
+
+background:#b36dff;
+
+}
+
+@keyframes floatBalloon{
+
+0%{
+
+transform:translateY(110vh);
+
+}
+
+100%{
+
+transform:translateY(-150px);
+
+}
+
+}
+
+
+
+/* =====================================
+   ROSE PETALS
+===================================== */
+
+.petal{
+
+position:absolute;
+
+width:20px;
+
+height:20px;
+
+background:#ff5f9e;
+
+border-radius:60% 40% 70% 30%;
+
+opacity:.85;
+
+pointer-events:none;
+
+animation:fallPetal linear infinite;
+
+filter:drop-shadow(0 0 12px hotpink);
+
+}
+
+@keyframes fallPetal{
+
+0%{
+
+transform:
+
+translateY(-50px)
+
+rotate(0deg);
+
+}
+
+100%{
+
+transform:
+
+translateY(110vh)
+
+translateX(120px)
+
+rotate(720deg);
+
+}
+
+}
+
+
+
+/* =====================================
+   SPARKLES
+===================================== */
+
+.sparkle{
+
+position:absolute;
+
+width:6px;
+
+height:6px;
+
+background:white;
+
+border-radius:50%;
+
+box-shadow:
+
+0 0 12px white,
+
+0 0 25px hotpink;
+
+animation:twinkle 2s infinite;
+
+}
+
+@keyframes twinkle{
+
+0%{
+
+opacity:.2;
+
+transform:scale(.4);
+
+}
+
+50%{
+
+opacity:1;
+
+transform:scale(1.8);
+
+}
+
+100%{
+
+opacity:.2;
+
+transform:scale(.4);
+
+}
+
+}
+
+
+
+/* =====================================
+   STAR BACKGROUND
+===================================== */
+
+.star{
+
+position:absolute;
+
+width:3px;
+
+height:3px;
+
+background:white;
+
+border-radius:50%;
+
+animation:starBlink 3s infinite;
+
+}
+
+@keyframes starBlink{
+
+0%{
+
+opacity:.2;
+
+}
+
+50%{
+
+opacity:1;
+
+}
+
+100%{
+
+opacity:.2;
+
+}
+
+}
+
+
+
+/* =====================================
+   HEART FLOAT
+===================================== */
+
+.heart{
+
+position:absolute;
+
+font-size:28px;
+
+color:#ff4d88;
+
+pointer-events:none;
+
+animation:heartFloat linear infinite;
+
+filter:
+
+drop-shadow(0 0 10px hotpink);
+
+}
+
+@keyframes heartFloat{
+
+0%{
+
+transform:
+
+translateY(100vh)
+
+scale(.3)
+
+rotate(0deg);
+
+opacity:0;
+
+}
+
+20%{
+
+opacity:1;
+
+}
+
+100%{
+
+transform:
+
+translateY(-150px)
+
+scale(1.4)
+
+rotate(360deg);
+
+opacity:0;
+
+}
+
+}
+
+
+
+/* =====================================
+   GIFT OPEN EFFECT
+===================================== */
+
+.giftOpen{
+
+animation:giftOpen .9s forwards;
+
+}
+
+@keyframes giftOpen{
+
+0%{
+
+transform:scale(1);
+
+}
+
+40%{
+
+transform:scale(1.3);
+
+}
+
+100%{
+
+transform:scale(10);
+
+opacity:0;
+
+}
+
+}
+
+
+
+/* =====================================
+   CAKE GLOW
+===================================== */
+
+#cakeGlow{
+
+position:absolute;
+
+left:50%;
+
+top:60%;
+
+transform:translate(-50%,-50%);
+
+width:320px;
+
+height:320px;
+
+border-radius:50%;
+
+background:
+
+radial-gradient(circle,
+
+rgba(255,80,160,.5),
+
+transparent 70%);
+
+filter:blur(60px);
+
+pointer-events:none;
+
+animation:cakePulse 3s infinite;
+
+z-index:2;
+
+}
+
+@keyframes cakePulse{
+
+0%{
+
+transform:
+
+translate(-50%,-50%)
+
+scale(.9);
+
+}
+
+50%{
+
+transform:
+
+translate(-50%,-50%)
+
+scale(1.1);
+
+}
+
+100%{
+
+transform:
+
+translate(-50%,-50%)
+
+scale(.9);
+
+}
+
+}
+
+
+
+/* =====================================
+   TYPEWRITER CURSOR
+===================================== */
+
+.cursor{
+
+display:inline-block;
+
+animation:blink .8s infinite;
+
+}
+
+@keyframes blink{
+
+0%,100%{
+
+opacity:1;
+
+}
+
+50%{
+
+opacity:0;
+
+}
+
+}
+
+
+
+/* =====================================
+   BUTTON RIPPLE
+===================================== */
+
+.ripple{
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+.ripple::after{
+
+content:"";
+
+position:absolute;
+
+width:0;
+
+height:0;
+
+background:rgba(255,255,255,.35);
+
+border-radius:50%;
+
+left:50%;
+
+top:50%;
+
+transform:translate(-50%,-50%);
+
+transition:.6s;
+
+}
+
+.ripple:hover::after{
+
+width:350px;
+
+height:350px;
+
+}
+
+
+
+/* =====================================
+   MAGIC FADE
+===================================== */
+
+.magicFade{
+
+animation:magicFade 1s ease;
+
+}
+
+@keyframes magicFade{
+
+0%{
+
+opacity:0;
+
+transform:scale(.7);
+
+}
+
+100%{
+
+opacity:1;
+
+transform:scale(1);
+
+}
+
+}
+
+
+
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
+
+@media screen and (max-width:1200px){
+
+#overlay h1{
+font-size:58px;
+}
+
+#overlay h2{
+font-size:38px;
+}
+
+#overlay p{
+width:85%;
+font-size:18px;
+}
+
+#slide{
+width:220px;
+height:320px;
+}
+
+.gateBox{
+max-width:90%;
+padding:35px;
+}
+
+}
+
+
+
+@media screen and (max-width:900px){
+
+#overlay h1{
+font-size:45px;
+}
+
+#overlay h2{
+font-size:30px;
+}
+
+#overlay p{
+width:92%;
+font-size:17px;
+line-height:30px;
+}
+
+#gallery{
+right:15px;
+bottom:15px;
+}
+
+#slide{
+width:170px;
+height:240px;
+}
+
+#musicControl{
+left:15px;
+bottom:15px;
+}
+
+#musicBtn{
+padding:12px 22px;
+font-size:16px;
+}
+
+.gateBox h1{
+font-size:50px;
+}
+
+.gateBox h2{
+font-size:24px;
+}
+
+.gateBox h3{
+font-size:28px;
+}
+
+.buttons{
+height:220px;
+}
+
+.buttons button{
+position:relative;
+display:block;
+margin:20px auto;
+left:auto !important;
+right:auto !important;
+}
+
+.letterBox{
+padding:25px;
+}
+
+#gift{
+font-size:90px;
+}
+
+}
+
+
+
+@media screen and (max-width:600px){
+
+#overlay h1{
+font-size:36px;
+}
+
+#overlay h2{
+font-size:24px;
+}
+
+#overlay p{
+font-size:15px;
+line-height:26px;
+}
+
+#slide{
+width:130px;
+height:180px;
+}
+
+#letterBtn{
+padding:12px 25px;
+font-size:16px;
+}
+
+#musicBtn{
+font-size:14px;
+padding:10px 18px;
+}
+
+.gateBox{
+padding:25px;
+}
+
+.gateBox h1{
+font-size:40px;
+}
+
+.gateBox h3{
+font-size:24px;
+}
+
+#gift{
+font-size:75px;
+}
+
+}
+
+
+
+/* =====================================
+   FIREWORK FLASH
+===================================== */
+
+.fireworkFlash{
+
+animation:flash .4s;
+
+}
+
+@keyframes flash{
+
+0%{
+background:white;
+}
+
+100%{
+background:transparent;
+}
+
+}
+
+
+
+/* =====================================
+   FLOATING GLOW
+===================================== */
+
+.floatingGlow{
+
+animation:floatingGlow 5s ease-in-out infinite;
+
+}
+
+@keyframes floatingGlow{
+
+0%{
+transform:translateY(0px);
+filter:drop-shadow(0 0 10px hotpink);
+}
+
+50%{
+transform:translateY(-15px);
+filter:drop-shadow(0 0 30px deeppink);
+}
+
+100%{
+transform:translateY(0px);
+filter:drop-shadow(0 0 10px hotpink);
+}
+
+}
+
+
+
+/* =====================================
+   FADE OUT
+===================================== */
+
+.fadeOut{
+
+animation:fadeOut .8s forwards;
+
+}
+
+@keyframes fadeOut{
+
+to{
+
+opacity:0;
+visibility:hidden;
+
+}
+
+}
+
+
+
+/* =====================================
+   SCALE IN
+===================================== */
+
+.scaleIn{
+
+animation:scaleIn .7s;
+
+}
+
+@keyframes scaleIn{
+
+0%{
+
+transform:scale(.5);
+opacity:0;
+
+}
+
+100%{
+
+transform:scale(1);
+opacity:1;
+
+}
+
+}
+
+
+
+/* =====================================
+   ROTATE
+===================================== */
+
+.rotate{
+
+animation:rotateObject 20s linear infinite;
+
+}
+
+@keyframes rotateObject{
+
+0%{
+
+transform:rotate(0deg);
+
+}
+
+100%{
+
+transform:rotate(360deg);
+
+}
+
+}
+
+
+
+/* =====================================
+   LOVE GLOW
+===================================== */
+
+.love{
+
+color:#ff4d88;
+
+text-shadow:
+
+0 0 10px hotpink,
+
+0 0 20px deeppink,
+
+0 0 40px deeppink,
+
+0 0 70px deeppink;
+
+}
+
+
+
+/* =====================================
+   HIDE ELEMENT
+===================================== */
+
+.hidden{
+
+display:none !important;
+
+}
+
+
+
+/* =====================================
+   SHOW ELEMENT
+===================================== */
+
+.show{
+
+display:block !important;
+
+}
+
+
+
+/* =====================================
+   TRANSITION
+===================================== */
+
+.transition{
+
+transition:.5s ease;
+
+}
+
+
+
+/* =====================================
+   BODY BACKGROUND ANIMATION
+===================================== */
+
+body{
+
+animation:bgAnimation 12s infinite alternate;
+
+}
+
+@keyframes bgAnimation{
+
+0%{
+
+background:#02020f;
+
+}
+
+50%{
+
+background:#12001d;
+
+}
+
+100%{
+
+background:#040414;
+
+}
+
+}
+
+
+
+/* =====================================
+   GLASS SHADOW
+===================================== */
+
+.shadow{
+
+box-shadow:
+
+0 0 25px rgba(255,255,255,.2),
+
+0 0 50px rgba(255,0,120,.25);
+
+}
+
+
+
+/* =====================================
+   END OF FILE
+===================================== */
