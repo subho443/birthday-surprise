@@ -21,184 +21,50 @@
 
 <body>
 
-<!-- ========================= -->
-<!-- ENTRY GATE -->
-<!-- ========================= -->
-
-<div id="gate">
-
-<div class="gateBox">
-
-<h1>❤️ Wait!! ❤️</h1>
-
-<h2>Before entering...</h2>
-
-<p>Answer one question 😊</p>
-
-<h3>Who loves you the most?</h3>
-
-<div class="buttons">
-
-<button id="yesBtn">❤️ YOU ❤️</button>
-
-<button id="noBtn">😒 ME</button>
-
-</div>
-
-<div id="correctMessage">
-
-<h1>I knew you'd choose the correct answer 😘</h1>
-
-<p>Now open your birthday gift ❤️</p>
-
-<div id="gift">
-🎁
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- ========================= -->
-<!-- MAIN BIRTHDAY PAGE -->
-<!-- ========================= -->
-
-<div id="overlay">
-
-<h1 id="typewriter"></h1>
-
-<h2>🎉 Happy Birthday My Love ❤️</h2>
-
-<p>
-
-Every star in the sky shines a little brighter because today is your birthday.
-
-May every dream come true and every smile stay forever.
-
-I hope this little surprise makes your day even more special.
-
-❤️
-
-</p>
-
-<button id="letterBtn">
-
-💌 Open My Letter
-
-</button>
-
-</div>
-
-
-<!-- ========================= -->
-<!-- LOVE LETTER -->
-<!-- ========================= -->
-
-<div id="letter">
-
-<div class="letterBox">
-
-<span id="closeLetter">✖</span>
-
-<h2>To My Love ❤️</h2>
-
-<p>
-
-Happy Birthday My Love ❤️
-
-Thank you for coming into my life.
-
-Every smile of yours is my favorite view.
-
-Every laugh of yours is my favorite song.
-
-Every moment with you is my favorite memory.
-
-No matter where life takes us,
-
-I promise to always support you,
-
-respect you,
-
-care for you,
-
-and love you with all my heart.
-
-I hope this birthday becomes one of your happiest memories.
-
-Happy Birthday once again.
-
-I Love You Forever ❤️
-
-</p>
-
-</div>
-
-</div>
-
-
-
-<!-- ========================= -->
-<!-- PHOTO GALLERY -->
-<!-- ========================= -->
-
-<div id="gallery">
-
-<img id="slide"
-
-src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=1200">
-
-</div>
-
-
-
-<!-- ========================= -->
-<!-- MUSIC -->
-<!-- ========================= -->
-
-<div id="musicControl">
-
-<button id="musicBtn">
-
-🎵 Play Music
-
-</button>
-
-</div>
-
-<audio id="music" loop>
-
-<source src="birthday.mp3" type="audio/mpeg">
-
-</audio>
-
-
-
-<!-- ========================= -->
-<!-- THREE.JS CANVAS -->
-<!-- ========================= -->
-
 <canvas id="bg"></canvas>
 
+<!-- ENTRY SCREEN -->
+<div id="gate">
+  <h1>💖 Who loves you the most?</h1>
 
+  <button id="yesBtn">YOU ❤️</button>
+  <button id="noBtn">ME 😂</button>
 
-<!-- ========================= -->
-<!-- LIBRARIES -->
-<!-- ========================= -->
+  <div id="correctMessage">
+    <h2>Correct ❤️</h2>
+    <div id="gift">🎁 Click Me</div>
+  </div>
+</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- MAIN SCREEN -->
+<div id="overlay">
+  <h1>Happy Birthday ❤️</h1>
+  <h2 id="typewriter"></h2>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <button id="letterBtn">Open Letter 💌</button>
+</div>
 
+<!-- LETTER -->
+<div id="letter">
+  <div class="letterBox">
+    <span id="closeLetter">❌</span>
 
+    <h2>My Love ❤️</h2>
+    <p>
+      Happy Birthday 🎉  
+      You are special to me ❤️
+    </p>
+  </div>
+</div>
 
-<!-- ========================= -->
-<!-- MAIN SCRIPT -->
-<!-- ========================= -->
+<!-- MUSIC -->
+<audio id="music" loop>
+  <source src="music/song.mp3" type="audio/mp3">
+</audio>
 
+<button id="musicBtn">🎵 Play Music</button>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script src="script.js"></script>
 
 </body>
