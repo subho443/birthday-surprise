@@ -1,3 +1,5 @@
+<script src="threeScene.js"></script>
+<script src="script.js"></script>
 // ==========================
 // ELEMENTS
 // ==========================
