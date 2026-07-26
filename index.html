@@ -1,163 +1,324 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Samm ❤️</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A premium cinematic 3D birthday surprise for Samm.">
+    <meta name="theme-color" content="#0b0b0b">
 
-<title>Happy Birthday Samm ❤️</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.165/build/three.min.js"></script>
+    <!-- Three.js -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <!-- GSAP -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 </head>
 
 <body>
 
-<div id="loading">
+<!-- ==========================================
+LOADER
+========================================== -->
 
-<h1>Loading...</h1>
+<div id="loader">
 
-<p>Preparing something special for Samm ❤️</p>
+    <div class="loader-content">
 
-</div>
+        <div class="loader-logo">
+            ❤️
+        </div>
 
-<canvas id="bg"></canvas>
+        <h1>Preparing Something Magical...</h1>
 
-<div id="particles"></div>
+        <div class="progress-bar">
+            <div id="progress"></div>
+        </div>
 
-<section id="hero">
+        <p id="loading-text">Loading Stars...</p>
 
-<h1>
-
-Happy Birthday
-
-<span>Samm ❤️</span>
-
-</h1>
-
-<p>
-
-Tap the gift to open your surprise
-
-</p>
-
-</section>
-
-<div id="gift-container">
-
-<div id="gift">
-
-<div class="lid"></div>
-
-<div class="box"></div>
-
-<div class="ribbon-v"></div>
-
-<div class="ribbon-h"></div>
+    </div>
 
 </div>
 
-</div>
 
-<section id="message" class="hidden">
+<!-- ==========================================
+CANVAS
+========================================== -->
 
-<h2>Dear Samm ❤️</h2>
+<canvas id="bgCanvas"></canvas>
 
-<p id="typing"></p>
 
-<button id="galleryBtn">
+<!-- ==========================================
+BACKGROUND EFFECTS
+========================================== -->
 
-Continue ❤️
+<div id="stars"></div>
+<div id="floatingHearts"></div>
 
-</button>
 
-</section>
+<!-- ==========================================
+MAIN CONTENT
+========================================== -->
 
-<section id="gallery" class="hidden">
+<main id="app" class="hidden">
 
-<h2>Our Memories</h2>
+    <!-- =====================================
+    HERO
+    ====================================== -->
 
-<div class="photos">
+    <section id="hero">
 
-<img src="images/photo1.jpg">
+        <div class="overlay"></div>
 
-<img src="images/photo2.jpg">
+        <div class="hero-content">
 
-<img src="images/photo3.jpg">
+            <span class="subtitle">
+                A Surprise Made With Love
+            </span>
 
-<img src="images/photo4.jpg">
+            <h1>
 
-</div>
+                Happy Birthday
 
-<button id="cakeBtn">
+                <span>Samm ❤️</span>
 
-One More Surprise 🎂
+            </h1>
 
-</button>
+            <p>
 
-</section>
+                Every star in this sky shines for you.
 
-<section id="cakeSection" class="hidden">
+            </p>
 
-<h2>Make a Wish ❤️</h2>
+            <button id="startJourney">
 
-<div id="cake">
+                Begin Our Journey
 
-🎂
+            </button>
 
-</div>
+        </div>
 
-<button id="wishBtn">
+    </section>
 
-Blow Candles
 
-</button>
 
-</section>
+    <!-- =====================================
+    THREE.JS AREA
+    ====================================== -->
 
-<section id="final" class="hidden">
+    <section id="sceneSection">
 
-<h1>
+        <div class="section-title">
 
-Happy Birthday
+            <h2>
 
-Samm ❤️
+                Your Gift Awaits
 
-</h1>
+            </h2>
 
-<p>
+            <p>
 
-You are the most beautiful chapter
+                Click the gift to discover what's inside.
 
-of my life.
+            </p>
 
-Thank you for existing.
+        </div>
 
-May every dream of yours come true.
+        <div id="threeContainer"></div>
 
-I love you endlessly ❤️
+    </section>
 
-</p>
 
-</section>
 
-<audio id="music" loop>
+    <!-- =====================================
+    LOVE LETTER
+    ====================================== -->
 
-<source src="music/birthday.mp3" type="audio/mp3">
+    <section id="letterSection">
+
+        <div class="letter-card">
+
+            <h2>
+
+                To My Dearest Samm ❤️
+
+            </h2>
+
+            <div id="typewriter"></div>
+
+            <button id="nextGallery">
+
+                Continue →
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+    PHOTO GALLERY
+    ====================================== -->
+
+    <section id="gallerySection">
+
+        <div class="section-title">
+
+            <h2>
+
+                Our Beautiful Memories
+
+            </h2>
+
+            <p>
+
+                Replace these with your favorite photos.
+
+            </p>
+
+        </div>
+
+        <div class="gallery-grid">
+
+            <div class="photo-card">
+                <img src="assets/photos/photo1.jpg" alt="Photo 1">
+            </div>
+
+            <div class="photo-card">
+                <img src="assets/photos/photo2.jpg" alt="Photo 2">
+            </div>
+
+            <div class="photo-card">
+                <img src="assets/photos/photo3.jpg" alt="Photo 3">
+            </div>
+
+            <div class="photo-card">
+                <img src="assets/photos/photo4.jpg" alt="Photo 4">
+            </div>
+
+            <div class="photo-card">
+                <img src="assets/photos/photo5.jpg" alt="Photo 5">
+            </div>
+
+            <div class="photo-card">
+                <img src="assets/photos/photo6.jpg" alt="Photo 6">
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+    CAKE
+    ====================================== -->
+
+    <section id="cakeSection">
+
+        <div class="section-title">
+
+            <h2>
+
+                Make A Wish ✨
+
+            </h2>
+
+            <p>
+
+                Another beautiful year begins today.
+
+            </p>
+
+        </div>
+
+        <div id="cakeScene"></div>
+
+    </section>
+
+
+
+    <!-- =====================================
+    FINAL SCREEN
+    ====================================== -->
+
+    <section id="finalSection">
+
+        <div class="final-card">
+
+            <h1>
+
+                Happy Birthday
+
+            </h1>
+
+            <h2>
+
+                Samm ❤️
+
+            </h2>
+
+            <p>
+
+                Thank you for being the most beautiful chapter of my life.
+
+            </p>
+
+            <button id="replay">
+
+                Replay Surprise
+
+            </button>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- ==========================================
+BACKGROUND MUSIC
+========================================== -->
+
+<audio
+    id="bgMusic"
+    preload="auto"
+    loop>
+
+    <source src="assets/music/birthday.mp3" type="audio/mpeg">
 
 </audio>
 
-<script src="script.js"></script>
+
+
+<!-- ==========================================
+MODULES
+========================================== -->
+
+<script src="scene.js"></script>
+<script src="gift.js"></script>
+<script src="particles.js"></script>
+<script src="gallery.js"></script>
+<script src="cake.js"></script>
+<script src="music.js"></script>
+<script src="app.js"></script>
 
 </body>
-
 </html>
