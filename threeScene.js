@@ -1,327 +1,587 @@
-// ===============================
-// THREE.JS SCENE
-// ===============================
+/* ==========================================================
+   HappyBirthdaySamm
+   scene.js
 
-const canvas = document.getElementById("bg");
+   Premium Three.js Scene Manager
+   ========================================================== */
 
-const scene = new THREE.Scene();
+"use strict";
 
-const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
-);
+window.SceneManager = (() => {
 
-camera.position.z = 8;
+    let scene;
+    let camera;
+    let renderer;
+    let clock;
 
-const renderer = new THREE.WebGLRenderer({
-    canvas,
-    antialias: true,
-    alpha: true
-});
+    let starField;
+    let starGeometry;
+    let starMaterial;
 
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
+    let floatingLights = [];
 
-renderer.shadowMap.enabled = true;
+    let animationStarted = false;
 
-// ===============================
-// LIGHTS
-// ===============================
+    const config = {
 
-const ambient = new THREE.AmbientLight(0xffffff,1.2);
+        fov: 50,
 
-scene.add(ambient);
+        near: 0.1,
 
-const point = new THREE.PointLight(0xffd700,4);
+        far: 2000,
 
-point.position.set(5,8,5);
+        cameraPosition: {
+            x: 0,
+            y: 2,
+            z: 12
+        },
 
-point.castShadow = true;
+        stars: 4000,
 
-scene.add(point);
+        radius: 250
 
-const point2 = new THREE.PointLight(0xffffff,2);
+    };
 
-point2.position.set(-5,-3,5);
+    /* ====================================================== */
 
-scene.add(point2);
+    async function init() {
 
-// ===============================
-// GIFT MATERIAL
-// ===============================
+        clock = new THREE.Clock();
 
-const redMaterial = new THREE.MeshStandardMaterial({
+        createScene();
 
-    color:0xd61b1b,
+        createRenderer();
 
-    metalness:.6,
+        createCamera();
 
-    roughness:.25
+        createLights();
 
-});
+        createStars();
 
-const goldMaterial = new THREE.MeshStandardMaterial({
+        createFloatingLights();
 
-    color:0xffd700,
+        registerObjects();
 
-    metalness:1,
+    }
 
-    roughness:.1
+    /* ====================================================== */
 
-});
+    function createScene() {
 
-// ===============================
-// GIFT BOX
-// ===============================
+        scene = new THREE.Scene();
 
-const gift = new THREE.Group();
+        scene.background = new THREE.Color(0x050505);
 
-// Main Box
+        scene.fog = new THREE.FogExp2(
+            0x000000,
+            0.015
+        );
 
-const body = new THREE.Mesh(
+    }
 
-    new THREE.BoxGeometry(2,2,2),
+    /* ====================================================== */
 
-    redMaterial
+    function createRenderer() {
 
-);
+        renderer = new THREE.WebGLRenderer({
 
-body.castShadow=true;
-body.receiveShadow=true;
+            canvas: document.getElementById("scene"),
 
-gift.add(body);
+            antialias: true,
 
-// Lid
+            alpha: true,
 
-const lid = new THREE.Mesh(
+            powerPreference: "high-performance"
 
-    new THREE.BoxGeometry(2.1,.35,2.1),
+        });
 
-    redMaterial
+        renderer.setPixelRatio(
 
-);
+            Math.min(window.devicePixelRatio, 2)
 
-lid.position.y=1.15;
+        );
 
-lid.castShadow=true;
+        renderer.setSize(
 
-gift.add(lid);
+            window.innerWidth,
 
-// Vertical Ribbon
+            window.innerHeight
 
-const ribbonV = new THREE.Mesh(
+        );
 
-    new THREE.BoxGeometry(.25,2.3,2.15),
+        renderer.outputColorSpace =
+            THREE.SRGBColorSpace;
 
-    goldMaterial
+        renderer.shadowMap.enabled = true;
 
-);
+        renderer.shadowMap.type =
+            THREE.PCFSoftShadowMap;
 
-gift.add(ribbonV);
+    }
 
-// Horizontal Ribbon
+    /* ====================================================== */
 
-const ribbonH = new THREE.Mesh(
+    function createCamera() {
 
-    new THREE.BoxGeometry(2.15,.25,2.15),
+        camera = new THREE.PerspectiveCamera(
 
-    goldMaterial
+            config.fov,
 
-);
+            window.innerWidth / window.innerHeight,
 
-gift.add(ribbonH);
+            config.near,
 
-// Bow
+            config.far
 
-const bow1 = new THREE.Mesh(
+        );
 
-    new THREE.TorusGeometry(.25,.08,20,60),
+        camera.position.set(
 
-    goldMaterial
+            config.cameraPosition.x,
 
-);
+            config.cameraPosition.y,
 
-bow1.rotation.x=Math.PI/2;
+            config.cameraPosition.z
 
-bow1.position.y=1.38;
+        );
 
-gift.add(bow1);
+        scene.add(camera);
 
-const bow2 = bow1.clone();
+    }
 
-bow2.rotation.y=Math.PI/2;
+    /* ====================================================== */
 
-gift.add(bow2);
+    function createLights() {
 
-scene.add(gift);
+        const ambient = new THREE.AmbientLight(
+            0xfff5d5,
+            1.2
+        );
 
-// ===============================
-// STARS
-// ===============================
+        scene.add(ambient);
 
-const starGeometry = new THREE.SphereGeometry(.03,8,8);
+        const goldLight = new THREE.DirectionalLight(
+            0xffd16b,
+            2
+        );
 
-const starMaterial = new THREE.MeshBasicMaterial({
+        goldLight.position.set(
+            10,
+            20,
+            10
+        );
 
-    color:0xffffff
+        goldLight.castShadow = true;
 
-});
+        goldLight.shadow.mapSize.width = 2048;
+        goldLight.shadow.mapSize.height = 2048;
 
-for(let i=0;i<1000;i++){
+        scene.add(goldLight);
 
-    const star=new THREE.Mesh(
+        const rim = new THREE.PointLight(
+            0xffaa33,
+            20,
+            80
+        );
 
-        starGeometry,
+        rim.position.set(
+            -10,
+            8,
+            -8
+        );
 
-        starMaterial
+        scene.add(rim);
 
-    );
+    }
 
-    star.position.set(
+    /* ====================================================== */
 
-        (Math.random()-.5)*120,
+    function createStars() {
 
-        (Math.random()-.5)*120,
+        starGeometry = new THREE.BufferGeometry();
 
-        (Math.random()-.5)*120
+        const positions = [];
 
-    );
+        for (let i = 0; i < config.stars; i++) {
 
-    scene.add(star);
+            const r =
+                config.radius *
+                Math.random();
 
-}
+            const theta =
+                Math.random() *
+                Math.PI *
+                2;
 
-// ===============================
-// PARTICLES
-// ===============================
+            const phi =
+                Math.acos(
+                    (Math.random() * 2) - 1
+                );
 
-const particles=[];
+            positions.push(
 
-const particleGeometry=new THREE.SphereGeometry(.04,8,8);
+                r *
+                Math.sin(phi) *
+                Math.cos(theta),
 
-const particleMaterial=new THREE.MeshBasicMaterial({
+                r *
+                Math.sin(phi) *
+                Math.sin(theta),
 
-    color:0xffd700
+                r *
+                Math.cos(phi)
 
-});
-
-for(let i=0;i<300;i++){
-
-    const p=new THREE.Mesh(
-
-        particleGeometry,
-
-        particleMaterial
-
-    );
-
-    p.position.set(
-
-        (Math.random()-.5)*20,
-
-        (Math.random()-.5)*20,
-
-        (Math.random()-.5)*20
-
-    );
-
-    particles.push(p);
-
-    scene.add(p);
-
-}
-
-// ===============================
-// MOUSE
-// ===============================
-
-let mouseX=0;
-let mouseY=0;
-
-window.addEventListener("mousemove",(event)=>{
-
-    mouseX=(event.clientX-window.innerWidth/2)/100;
-
-    mouseY=(event.clientY-window.innerHeight/2)/100;
-
-});
-
-// ===============================
-// OPEN GIFT
-// ===============================
-
-window.openGift=function(){
-
-    gsap.to(lid.position,{
-
-        y:3,
-
-        duration:1.2
-
-    });
-
-    gsap.to(lid.rotation,{
-
-        z:-1.5,
-
-        duration:1.2
-
-    });
-
-};
-
-// ===============================
-// ANIMATION
-// ===============================
-
-function animate(){
-
-    requestAnimationFrame(animate);
-
-    gift.rotation.y+=0.01;
-
-    gift.rotation.x=Math.sin(Date.now()*0.001)*0.08;
-
-    camera.position.x+=(mouseX-camera.position.x)*0.03;
-
-    camera.position.y+=(-mouseY-camera.position.y)*0.03;
-
-    camera.lookAt(scene.position);
-
-    particles.forEach(p=>{
-
-        p.rotation.x+=0.02;
-
-        p.rotation.y+=0.02;
-
-        p.position.y+=0.005;
-
-        if(p.position.y>10){
-
-            p.position.y=-10;
+            );
 
         }
 
+        starGeometry.setAttribute(
+
+            "position",
+
+            new THREE.Float32BufferAttribute(
+                positions,
+                3
+            )
+
+        );
+
+        starMaterial = new THREE.PointsMaterial({
+
+            color: 0xfff4cc,
+
+            size: 0.6,
+
+            transparent: true,
+
+            opacity: 0.85,
+
+            depthWrite: false
+
+        });
+
+        starField = new THREE.Points(
+
+            starGeometry,
+
+            starMaterial
+
+        );
+
+        scene.add(starField);
+
+    }
+
+    /* ====================================================== */
+
+    function createFloatingLights() {
+
+        for (let i = 0; i < 15; i++) {
+
+            const light = new THREE.PointLight(
+
+                0xffd56b,
+
+                2,
+
+                15
+
+            );
+
+            light.position.set(
+
+                (Math.random() - 0.5) * 18,
+
+                Math.random() * 10,
+
+                (Math.random() - 0.5) * 18
+
+            );
+
+            floatingLights.push({
+
+                light,
+
+                offset: Math.random() * 10,
+
+                speed: 0.3 + Math.random()
+
+            });
+
+            scene.add(light);
+
+        }
+
+    }
+
+    /* ====================================================== */
+
+    function registerObjects() {
+
+        if (
+            window.GiftManager &&
+            GiftManager.object3D
+        ) {
+
+            scene.add(
+                GiftManager.object3D
+            );
+
+        }
+
+        if (
+            window.CakeManager &&
+            CakeManager.object3D
+        ) {
+
+            scene.add(
+                CakeManager.object3D
+            );
+
+        }
+
+    }
+
+    /* ====================================================== */
+
+    function start() {
+
+        animationStarted = true;
+
+    }
+
+    /* ======================================================
+       CAMERA MOTION
+    ====================================================== */
+
+    const mouse = {
+        x: 0,
+        y: 0
+    };
+
+    const target = {
+        x: config.cameraPosition.x,
+        y: config.cameraPosition.y
+    };
+
+    window.addEventListener("mousemove", e => {
+
+        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = (e.clientY / window.innerHeight) * 2 - 1;
+
     });
 
-    renderer.render(scene,camera);
+    function updateCamera(delta) {
 
-}
+        target.x = mouse.x * 0.8;
+        target.y = 2 + mouse.y * 0.5;
 
-animate();
+        camera.position.x +=
+            (target.x - camera.position.x) *
+            delta *
+            2.5;
 
-// ===============================
-// RESIZE
-// ===============================
+        camera.position.y +=
+            (target.y - camera.position.y) *
+            delta *
+            2.5;
 
-window.addEventListener("resize",()=>{
+        camera.lookAt(0, 1.5, 0);
 
-    camera.aspect=window.innerWidth/window.innerHeight;
+    }
 
-    camera.updateProjectionMatrix();
+    /* ======================================================
+       STAR ANIMATION
+    ====================================================== */
 
-    renderer.setSize(window.innerWidth,window.innerHeight);
+    function updateStars(delta) {
 
-});
+        if (!starField) return;
+
+        starField.rotation.y += delta * 0.02;
+        starField.rotation.x += delta * 0.005;
+
+    }
+
+    /* ======================================================
+       FLOATING LIGHT ANIMATION
+    ====================================================== */
+
+    function updateLights(time) {
+
+        floatingLights.forEach(item => {
+
+            item.light.position.y =
+                4 +
+                Math.sin(
+                    time * item.speed + item.offset
+                ) * 2;
+
+            item.light.position.x +=
+                Math.sin(
+                    time * 0.2 + item.offset
+                ) * 0.002;
+
+        });
+
+    }
+
+    /* ======================================================
+       SCENE UPDATE
+    ====================================================== */
+
+    function update(delta) {
+
+        if (!animationStarted) return;
+
+        const elapsed = clock.getElapsedTime();
+
+        updateCamera(delta);
+
+        updateStars(delta);
+
+        updateLights(elapsed);
+
+        renderer.render(scene, camera);
+
+    }
+
+    /* ======================================================
+       RESIZE
+    ====================================================== */
+
+    function resize() {
+
+        camera.aspect =
+            window.innerWidth /
+            window.innerHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(
+
+            window.innerWidth,
+
+            window.innerHeight
+
+        );
+
+        renderer.setPixelRatio(
+
+            Math.min(window.devicePixelRatio, 2)
+
+        );
+
+    }
+
+    /* ======================================================
+       PUBLIC HELPERS
+    ====================================================== */
+
+    function add(object) {
+
+        if (object) {
+
+            scene.add(object);
+
+        }
+
+    }
+
+    function remove(object) {
+
+        if (object) {
+
+            scene.remove(object);
+
+        }
+
+    }
+
+    function getScene() {
+
+        return scene;
+
+    }
+
+    function getCamera() {
+
+        return camera;
+
+    }
+
+    function getRenderer() {
+
+        return renderer;
+
+    }
+
+    /* ======================================================
+       CLEANUP
+    ====================================================== */
+
+    function dispose() {
+
+        if (starGeometry) {
+
+            starGeometry.dispose();
+
+        }
+
+        if (starMaterial) {
+
+            starMaterial.dispose();
+
+        }
+
+        floatingLights.forEach(item => {
+
+            scene.remove(item.light);
+
+        });
+
+        floatingLights.length = 0;
+
+        renderer.dispose();
+
+    }
+
+    /* ======================================================
+       API
+    ====================================================== */
+
+    return {
+
+        init,
+
+        start,
+
+        update,
+
+        resize,
+
+        add,
+
+        remove,
+
+        dispose,
+
+        getScene,
+
+        getCamera,
+
+        getRenderer
+
+    };
+
+})();
+
+
+
+
+
+
+
+
+
+                       
