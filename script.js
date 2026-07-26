@@ -1,322 +1,465 @@
-<script src="threeScene.js"></script>
-<script src="script.js"></script>
-// ==========================
-// ELEMENTS
-// ==========================
+/* ==========================================================
+   HappyBirthdaySamm
+   app.js
 
-const loading = document.getElementById("loading");
-const gift = document.getElementById("gift");
-const message = document.getElementById("message");
-const gallery = document.getElementById("gallery");
-const finalSection = document.getElementById("final");
-const cakeSection = document.getElementById("cakeSection");
+   Main Application Controller
 
-const galleryBtn = document.getElementById("galleryBtn");
-const cakeBtn = document.getElementById("cakeBtn");
-const wishBtn = document.getElementById("wishBtn");
+   Coordinates:
+   - Loader
+   - Scene
+   - Gift
+   - Gallery
+   - Cake
+   - Music
+   - Particles
+   - UI
+   ========================================================== */
 
-const music = document.getElementById("music");
-const typing = document.getElementById("typing");
+"use strict";
 
-// ==========================
-// LOADING SCREEN
-// ==========================
+window.BirthdayApp = (() => {
 
-window.addEventListener("load", () => {
+    const state = {
 
-    setTimeout(() => {
+        loaded: false,
 
-        gsap.to("#loading", {
+        introFinished: false,
 
-            opacity:0,
-            duration:1,
+        giftOpened: false,
 
-            onComplete(){
+        galleryOpened: false,
 
-                loading.style.display="none";
+        cakeShown: false,
+
+        musicStarted: false,
+
+        currentSection: "loading"
+
+    };
+
+
+    const elements = {
+
+        loader: null,
+
+        progressBar: null,
+
+        loadingText: null,
+
+        canvas: null,
+
+        overlay: null,
+
+        introTitle: null,
+
+        enterButton: null,
+
+        giftButton: null,
+
+        letter: null,
+
+        gallery: null,
+
+        cake: null,
+
+        ending: null
+
+    };
+
+
+    function cacheDOM() {
+
+        elements.loader = document.getElementById("loader");
+
+        elements.progressBar = document.getElementById("loader-progress");
+
+        elements.loadingText = document.getElementById("loading-text");
+
+        elements.canvas = document.getElementById("scene");
+
+        elements.overlay = document.getElementById("overlay");
+
+        elements.introTitle = document.getElementById("intro-title");
+
+        elements.enterButton = document.getElementById("enter-btn");
+
+        elements.giftButton = document.getElementById("gift-btn");
+
+        elements.letter = document.getElementById("love-letter");
+
+        elements.gallery = document.getElementById("gallery");
+
+        elements.cake = document.getElementById("cake-section");
+
+        elements.ending = document.getElementById("ending-screen");
+
+    }
+
+    /* ------------------------------------------------------ */
+
+    function preloadAssets() {
+
+        return new Promise(resolve => {
+
+            const fakeAssets = [
+
+                "textures",
+
+                "music",
+
+                "models",
+
+                "gallery",
+
+                "fonts",
+
+                "particles",
+
+                "scene",
+
+                "cake"
+
+            ];
+
+            let loaded = 0;
+
+            const total = fakeAssets.length;
+
+            const timer = setInterval(() => {
+
+                loaded++;
+
+                const percent = Math.floor((loaded / total) * 100);
+
+                if (elements.progressBar) {
+
+                    elements.progressBar.style.width = percent + "%";
+
+                }
+
+                if (elements.loadingText) {
+
+                    elements.loadingText.textContent =
+                        "Loading " + percent + "%";
+
+                }
+
+                if (loaded >= total) {
+
+                    clearInterval(timer);
+
+                    resolve();
+
+                }
+
+            }, 350);
+
+        });
+
+    }
+
+    /* ------------------------------------------------------ */
+
+    async function initializeModules() {
+
+        if (window.SceneManager) {
+
+            await SceneManager.init();
+
+        }
+
+        if (window.ParticlesManager) {
+
+            ParticlesManager.init();
+
+        }
+
+        if (window.MusicManager) {
+
+            MusicManager.init();
+
+        }
+
+        if (window.GiftManager) {
+
+            GiftManager.init();
+
+        }
+
+        if (window.GalleryManager) {
+
+            GalleryManager.init();
+
+        }
+
+        if (window.CakeManager) {
+
+            CakeManager.init();
+
+        }
+
+    }
+
+    /* ------------------------------------------------------ */
+
+    async function hideLoader() {
+
+        return new Promise(resolve => {
+
+            gsap.to(elements.loader, {
+
+                opacity: 0,
+
+                duration: 1.2,
+
+                ease: "power3.out",
+
+                onComplete: () => {
+
+                    elements.loader.style.display = "none";
+
+                    resolve();
+
+                }
+
+            });
+
+        });
+
+    }
+
+    /* ------------------------------------------------------ */
+
+    async function playIntroAnimation() {
+
+        state.currentSection = "intro";
+
+        const tl = gsap.timeline();
+
+        tl.from(elements.introTitle, {
+
+            opacity: 0,
+
+            y: 120,
+
+            duration: 1.6,
+
+            ease: "power4.out"
+
+        });
+
+        tl.from(elements.enterButton, {
+
+            opacity: 0,
+
+            scale: 0.5,
+
+            duration: 1,
+
+            ease: "back.out(2)"
+
+        });
+
+    }
+
+    /* ------------------------------------------------------ */
+
+    function bindEvents() {
+
+        if (elements.enterButton) {
+
+            elements.enterButton.addEventListener("click", beginExperience);
+
+        }
+
+        window.addEventListener("resize", () => {
+
+            if (window.SceneManager) {
+
+                SceneManager.resize();
 
             }
 
         });
 
-    },2500);
-
-});
-
-// ==========================
-// LOVE LETTER
-// ==========================
-
-const text = `
-
-Happy Birthday Samm ❤️
-
-Today is all about celebrating you.
-
-You are the smile that brightens my darkest days.
-
-Thank you for entering my life.
-
-Every moment with you feels magical.
-
-I hope this little surprise makes you smile.
-
-May your dreams come true.
-
-May your heart always stay happy.
-
-Stay the amazing person you are.
-
-I promise to always cheer for you.
-
-Happy Birthday once again ❤️
-
-Love You Forever.
-
-`;
-
-let i = 0;
-
-function typeWriter(){
-
-    if(i < text.length){
-
-        typing.innerHTML += text.charAt(i);
-
-        i++;
-
-        setTimeout(typeWriter,35);
-
     }
 
-}
+    /* ------------------------------------------------------ */
 
-// ==========================
-// GIFT CLICK
-// ==========================
+    async function beginExperience() {
 
-gift.addEventListener("click",()=>{
+        if (state.introFinished) return;
 
-    gift.classList.add("open");
-openGift();
-    music.play();
+        state.introFinished = true;
 
-    confetti({
+        gsap.to("#intro-screen", {
 
-        particleCount:250,
+            opacity: 0,
 
-        spread:180,
+            duration: 1,
 
-        origin:{y:0.5}
+            onComplete() {
 
-    });
+                const intro = document.getElementById("intro-screen");
 
-    setTimeout(()=>{
+                if (intro) {
 
-        message.classList.remove("hidden");
+                    intro.style.display = "none";
 
-        message.scrollIntoView({
+                }
 
-            behavior:"smooth"
+            }
 
         });
 
-        typeWriter();
+        if (window.SceneManager) {
 
-    },1800);
-
-});
-
-// ==========================
-// GALLERY BUTTON
-// ==========================
-
-galleryBtn.addEventListener("click",()=>{
-
-    gallery.classList.remove("hidden");
-
-    gallery.scrollIntoView({
-
-        behavior:"smooth"
-
-    });
-
-});
-
-// ==========================
-// CAKE
-// ==========================
-
-cakeBtn.addEventListener("click",()=>{
-
-    cakeSection.classList.remove("hidden");
-
-    cakeSection.scrollIntoView({
-
-        behavior:"smooth"
-
-    });
-
-});
-
-// ==========================
-// WISH BUTTON
-// ==========================
-
-wishBtn.addEventListener("click",()=>{
-
-    confetti({
-
-        particleCount:400,
-
-        spread:360,
-
-        startVelocity:50
-
-    });
-
-    finalSection.classList.remove("hidden");
-
-    finalSection.scrollIntoView({
-
-        behavior:"smooth"
-
-    });
-
-});
-
-// ==========================
-// FLOATING HEARTS
-// ==========================
-
-function createHeart(){
-
-    const heart=document.createElement("div");
-
-    heart.innerHTML="❤️";
-
-    heart.style.position="fixed";
-
-    heart.style.left=Math.random()*100+"vw";
-
-    heart.style.bottom="-50px";
-
-    heart.style.fontSize=Math.random()*20+20+"px";
-
-    heart.style.pointerEvents="none";
-
-    heart.style.zIndex="999";
-
-    document.body.appendChild(heart);
-
-    gsap.to(heart,{
-
-        y:-window.innerHeight-200,
-
-        x:Math.random()*200-100,
-
-        rotation:360,
-
-        duration:7,
-
-        ease:"none",
-
-        onComplete(){
-
-            heart.remove();
+            SceneManager.start();
 
         }
 
-    });
+        if (window.MusicManager) {
 
-}
+            MusicManager.play();
 
-setInterval(createHeart,700);
+            state.musicStarted = true;
 
-// ==========================
-// PHOTO ANIMATION
-// ==========================
+        }
 
-const photos=document.querySelectorAll(".photos img");
+        setTimeout(() => {
 
-photos.forEach(photo=>{
+            if (window.GiftManager) {
 
-    photo.addEventListener("mouseenter",()=>{
+                GiftManager.showGift();
 
-        gsap.to(photo,{
+            }
 
-            scale:1.08,
+        }, 1500);
 
-            duration:.3
+    }
 
-        });
+    /* ------------------------------------------------------ */
 
-    });
+    function showLoveLetter() {
 
-    photo.addEventListener("mouseleave",()=>{
+        state.currentSection = "letter";
 
-        gsap.to(photo,{
+        if (window.GiftManager) {
 
-            scale:1,
+            GiftManager.hide();
 
-            duration:.3
+        }
 
-        });
+        if (window.Typewriter) {
 
-    });
+            Typewriter.start();
 
-});
+        }
 
-// ==========================
-// BUTTON GLOW
-// ==========================
+        gsap.to(elements.letter, {
 
-document.querySelectorAll("button").forEach(btn=>{
+            opacity: 1,
 
-    btn.addEventListener("mouseenter",()=>{
+            y: 0,
 
-        gsap.to(btn,{
+            duration: 1.2,
 
-            scale:1.08,
-
-            duration:.3
+            ease: "power3.out"
 
         });
 
-    });
+    }
 
-    btn.addEventListener("mouseleave",()=>{
+    /* ------------------------------------------------------ */
 
-        gsap.to(btn,{
+    function openGallery() {
 
-            scale:1,
+        state.galleryOpened = true;
 
-            duration:.3
+        state.currentSection = "gallery";
+
+        if (window.GalleryManager) {
+
+            GalleryManager.open();
+
+        }
+
+    }
+
+    /* ------------------------------------------------------ */
+
+    function showCake() {
+
+        state.cakeShown = true;
+
+        state.currentSection = "cake";
+
+        if (window.CakeManager) {
+
+            CakeManager.show();
+
+        }
+
+    }
+
+    /* ------------------------------------------------------ */
+
+    function finishExperience() {
+
+        state.currentSection = "ending";
+
+        gsap.to(elements.ending, {
+
+            opacity: 1,
+
+            duration: 2,
+
+            ease: "power2.out"
 
         });
 
-    });
+    }
 
-});
+    /* ------------------------------------------------------ */
 
-// ==========================
-// PARALLAX
-// ==========================
+    async function init() {
 
-window.addEventListener("mousemove",(e)=>{
+        cacheDOM();
 
-    const x=(e.clientX/window.innerWidth-.5)*20;
+        bindEvents();
 
-    const y=(e.clientY/window.innerHeight-.5)*20;
+        await preloadAssets();
 
-    gsap.to("#gift",{
+        await initializeModules();
 
-        x:x,
+        await hideLoader();
 
-        y:y,
+        await playIntroAnimation();
 
-        duration:.8
+        state.loaded = true;
 
-    });
+    }
+
+    return {
+
+        init,
+
+        showLoveLetter,
+
+        openGallery,
+
+        showCake,
+
+        finishExperience,
+
+        state
+
+    };
+
+})();
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    BirthdayApp.init();
 
 });
