@@ -463,3 +463,422 @@ document.addEventListener("DOMContentLoaded", () => {
     BirthdayApp.init();
 
 });
+/* ==========================================================
+   APP EVENT BUS
+========================================================== */
+
+const AppEvents = {
+
+    events: {},
+
+    on(event, callback) {
+
+        if (!this.events[event]) {
+            this.events[event] = [];
+        }
+
+        this.events[event].push(callback);
+
+    },
+
+    off(event, callback) {
+
+        if (!this.events[event]) return;
+
+        this.events[event] =
+            this.events[event].filter(fn => fn !== callback);
+
+    },
+
+    emit(event, data = null) {
+
+        if (!this.events[event]) return;
+
+        this.events[event].forEach(fn => fn(data));
+
+    }
+
+};
+
+window.AppEvents = AppEvents;
+
+
+/* ==========================================================
+   GLOBAL TIMELINE
+========================================================== */
+
+let masterTimeline = gsap.timeline({
+
+    paused: true
+
+});
+
+function buildTimeline() {
+
+    masterTimeline.clear();
+
+    masterTimeline.addLabel("gift");
+
+    masterTimeline.call(() => {
+
+        if (window.GiftManager) {
+
+            GiftManager.enableInteraction();
+
+        }
+
+    });
+
+}
+
+buildTimeline();
+
+
+/* ==========================================================
+   GIFT EVENTS
+========================================================== */
+
+AppEvents.on("giftOpened", () => {
+
+    BirthdayApp.state.giftOpened = true;
+
+    confetti({
+
+        particleCount: 250,
+
+        spread: 100,
+
+        origin: {
+
+            y: 0.65
+
+        }
+
+    });
+
+    if (window.ParticlesManager) {
+
+        ParticlesManager.fireworks();
+
+    }
+
+    gsap.delayedCall(1.5, () => {
+
+        BirthdayApp.showLoveLetter();
+
+    });
+
+});
+
+
+/* ==========================================================
+   LETTER COMPLETE
+========================================================== */
+
+AppEvents.on("letterFinished", () => {
+
+    gsap.delayedCall(1, () => {
+
+        BirthdayApp.openGallery();
+
+    });
+
+});
+
+
+/* ==========================================================
+   GALLERY COMPLETE
+========================================================== */
+
+AppEvents.on("galleryFinished", () => {
+
+    gsap.delayedCall(1, () => {
+
+        BirthdayApp.showCake();
+
+    });
+
+});
+
+
+/* ==========================================================
+   CAKE COMPLETE
+========================================================== */
+
+AppEvents.on("cakeFinished", () => {
+
+    gsap.delayedCall(2, () => {
+
+        BirthdayApp.finishExperience();
+
+    });
+
+});
+
+
+/* ==========================================================
+   LOOP
+========================================================== */
+
+let previous = performance.now();
+
+function animate(now) {
+
+    const delta = (now - previous) / 1000;
+
+    previous = now;
+
+    if (window.SceneManager) {
+
+        SceneManager.update(delta);
+
+    }
+
+    if (window.ParticlesManager) {
+
+        ParticlesManager.update(delta);
+
+    }
+
+    if (window.GiftManager) {
+
+        GiftManager.update(delta);
+
+    }
+
+    if (window.CakeManager) {
+
+        CakeManager.update(delta);
+
+    }
+
+    requestAnimationFrame(animate);
+
+}
+
+requestAnimationFrame(animate);
+
+
+/* ==========================================================
+   VISIBILITY API
+========================================================== */
+
+document.addEventListener("visibilitychange", () => {
+
+    if (document.hidden) {
+
+        if (window.MusicManager) {
+
+            MusicManager.pause();
+
+        }
+
+    } else {
+
+        if (
+            BirthdayApp.state.musicStarted &&
+            window.MusicManager
+        ) {
+
+            MusicManager.resume();
+
+        }
+
+    }
+
+});
+
+
+/* ==========================================================
+   KEYBOARD SHORTCUTS
+========================================================== */
+
+window.addEventListener("keydown", e => {
+
+    switch (e.key.toLowerCase()) {
+
+        case "m":
+
+            if (window.MusicManager) {
+
+                MusicManager.toggleMute();
+
+            }
+
+            break;
+
+        case "g":
+
+            if (window.GalleryManager) {
+
+                GalleryManager.open();
+
+            }
+
+            break;
+
+        case "c":
+
+            if (window.CakeManager) {
+
+                CakeManager.show();
+
+            }
+
+            break;
+
+        case "escape":
+
+            if (window.GalleryManager) {
+
+                GalleryManager.close();
+
+            }
+
+            break;
+
+    }
+
+});
+
+
+/* ==========================================================
+   PERFORMANCE MONITOR
+========================================================== */
+
+let frameCounter = 0;
+
+let fps = 0;
+
+setInterval(() => {
+
+    fps = frameCounter;
+
+    frameCounter = 0;
+
+}, 1000);
+
+function countFPS() {
+
+    frameCounter++;
+
+    requestAnimationFrame(countFPS);
+
+}
+
+countFPS();
+
+
+/* ==========================================================
+   MOBILE DETECTION
+========================================================== */
+
+BirthdayApp.isMobile = function () {
+
+    return window.innerWidth < 768;
+
+};
+
+
+/* ==========================================================
+   REDUCE MOTION SUPPORT
+========================================================== */
+
+BirthdayApp.prefersReducedMotion = function () {
+
+    return window.matchMedia(
+
+        "(prefers-reduced-motion: reduce)"
+
+    ).matches;
+
+};
+
+
+/* ==========================================================
+   SAFE GSAP WRAPPER
+========================================================== */
+
+BirthdayApp.animate = function (target, vars) {
+
+    if (!target) return;
+
+    gsap.to(target, vars);
+
+};
+
+
+/* ==========================================================
+   ERROR HANDLER
+========================================================== */
+
+window.addEventListener("error", e => {
+
+    console.error(
+
+        "[HappyBirthdaySamm]",
+
+        e.message
+
+    );
+
+});
+
+
+window.addEventListener(
+
+    "unhandledrejection",
+
+    e => {
+
+        console.error(e.reason);
+
+    }
+
+);
+
+
+/* ==========================================================
+   DEBUG API
+========================================================== */
+
+window.DebugBirthday = {
+
+    openGift() {
+
+        AppEvents.emit("giftOpened");
+
+    },
+
+    gallery() {
+
+        AppEvents.emit("galleryFinished");
+
+    },
+
+    cake() {
+
+        AppEvents.emit("cakeFinished");
+
+    },
+
+    ending() {
+
+        BirthdayApp.finishExperience();
+
+    }
+
+};
+
+
+/* ==========================================================
+   APP READY
+========================================================== */
+
+console.log(
+
+    "%cHappyBirthdaySamm Loaded",
+
+    "color:gold;font-size:18px;font-weight:bold"
+
+);
