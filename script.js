@@ -98,7 +98,7 @@ function typeWriter(){
 gift.addEventListener("click",()=>{
 
     gift.classList.add("open");
-
+openGift();
     music.play();
 
     confetti({
